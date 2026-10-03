@@ -1,0 +1,334 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 7 9 14;
+    --foreground: 241 245 249;
+  }
+
+  * {
+    @apply border-slate-800;
+  }
+
+  html,
+  body {
+    background-color: #07090E !important;
+    color: #f1f5f9;
+  }
+
+  #root {
+    min-height: 100vh;
+    background-color: #07090E;
+  }
+
+  html {
+    @apply scroll-smooth;
+  }
+
+  body {
+    @apply bg-background text-slate-100 font-sans antialiased;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+
+  ::selection {
+    @apply bg-cyan-500 text-black;
+  }
+
+  ::-webkit-scrollbar {
+    @apply w-2 h-2;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-slate-700 rounded-full;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-slate-600;
+  }
+}
+
+@layer components {
+  .glass {
+    @apply bg-slate-900/80 backdrop-blur-xl border border-white/10;
+  }
+
+  .glass-strong {
+    @apply bg-slate-950/90 backdrop-blur-2xl border border-white/20;
+  }
+
+  .card {
+    @apply rounded-2xl bg-slate-900/80 border border-white/10 backdrop-blur-xl shadow-xl;
+  }
+
+  .card-hover {
+    @apply card transition-all duration-300 hover:border-white/20 hover:bg-slate-900/90 hover:shadow-2xl;
+  }
+
+  .btn-primary {
+    @apply px-4 py-2 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 text-black font-extrabold text-sm shadow-lg shadow-cyan-500/20 hover:from-cyan-400 hover:to-blue-500 transition-all duration-200 active:scale-95;
+  }
+
+  .btn-secondary {
+    @apply px-4 py-2 rounded-xl bg-slate-800 text-slate-200 font-bold text-sm border border-white/10 hover:bg-slate-700 transition-all duration-200;
+  }
+
+  .btn-ghost {
+    @apply px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-slate-200 hover:bg-white/5 transition-all duration-200;
+  }
+
+  .input {
+    @apply w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-all duration-200;
+  }
+
+  .tab-active {
+    @apply border-b-2 border-cyan-400 text-cyan-400 bg-cyan-500/10;
+  }
+
+  .tab-inactive {
+    @apply border-b-2 border-transparent text-slate-400 hover:text-slate-200 hover:bg-white/5;
+  }
+
+  .metric-bar {
+    @apply w-full bg-slate-800 h-2.5 rounded-full overflow-hidden p-0.5;
+  }
+
+  .badge {
+    @apply text-[10px] font-bold tracking-widest uppercase px-2 py-0.5 rounded-md border;
+  }
+
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@layer utilities {
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 via-blue-400 to-indigo-400;
+  }
+
+  .text-gradient-emerald {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-emerald-400 to-teal-400;
+  }
+
+  .text-gradient-rose {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-rose-400 to-pink-400;
+  }
+
+  .text-gradient-amber {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-amber-400 to-orange-400;
+  }
+
+  .animate-in {
+    animation: animateIn 0.3s ease-out forwards;
+  }
+
+  @keyframes animateIn {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Tauri WebView2 fallback: CSS transitions are my most reliable path */
+  .boot-fade-out {
+    -webkit-transition: opacity 0.9s ease, -webkit-transform 0.9s ease-out;
+    transition: opacity 0.9s ease, transform 0.9s ease-out;
+  }
+
+  /* Generic fadeIn keyframes for entrance effects (JS-free fallback) */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  .animate-fade-in {
+    animation: fadeIn 0.4s ease-out forwards;
+  }
+
+  .gradient-border {
+    position: relative;
+    background: linear-gradient(#0C0F14, #0C0F14) padding-box,
+      linear-gradient(135deg, #06B6D4, #6366F1, #8B5CF6) border-box;
+    border: 1px solid transparent;
+  }
+
+  .gradient-border-cyan {
+    position: relative;
+    background: linear-gradient(#0C0F14, #0C0F14) padding-box,
+      linear-gradient(135deg, #06B6D4, #0891B2) border-box;
+    border: 1px solid transparent;
+  }
+
+  /* Tauri WebView2: CSS transition fallback for BootupScreen fade */
+  .boot-screen {
+    will-change: opacity;
+    -webkit-transition: opacity 0.5s ease-out, -webkit-opacity 0.5s ease-out;
+  }
+
+  /* Boot exit: CSS fallback for framer-motion fade-out (Tauri WebView2) */
+  @keyframes fadeOut {
+    from { opacity: 1; transform: scale(1); }
+    to   { opacity: 0; transform: scale(1.02); }
+  }
+
+  .boot-exit {
+    animation: fadeOut 0.8s ease-out forwards;
+    pointer-events: none;
+  }
+
+  /* JS-free fallback: applies only when framer-motion isn't driving opacity.
+     Keeps the visual behavior consistent if the <motion.div> animation is
+     interrupted (e.g. parent unmounts before onComplete fires). */
+  .bootup-screen-root:not(.boot-motions-still-mounted) {
+    /* no-op – kept as a comment anchor for future tweaks */
+  }
+
+  /* ── Cyberpunk Bootup screen ───────────────────────────────────── */
+  /* Seamless animated perspective grid floor (synthwave). */
+  .cyber-grid-floor {
+    position: absolute;
+    left: -50%;
+    bottom: 0;
+    width: 200%;
+    height: 55%;
+    background-image:
+      linear-gradient(to right, rgba(34, 211, 238, 0.18) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(34, 211, 238, 0.18) 1px, transparent 1px);
+    background-size: 60px 60px;
+    transform: perspective(420px) rotateX(62deg);
+    transform-origin: center 0;
+    animation: cyberGridScroll 5s linear infinite;
+    -webkit-mask-image: radial-gradient(ellipse at 50% 0%, #000 0%, transparent 75%);
+    mask-image: radial-gradient(ellipse at 50% 0%, #000 0%, transparent 75%);
+  }
+  @keyframes cyberGridScroll {
+    from { background-position: 0 0; }
+    to   { background-position: 0 60px; }
+  }
+
+  /* Soft glowing horizon line at the top of the grid. */
+  .cyber-horizon {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 35%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, rgba(34,211,238,0.7), rgba(99,102,241,0.7), transparent);
+    box-shadow: 0 0 24px rgba(34,211,238,0.6);
+    filter: blur(0.5px);
+  }
+
+  /* Horizontal scanlines across the whole screen. */
+  .cyber-scanlines {
+    position: absolute;
+    inset: 0;
+    background-image: repeating-linear-gradient(
+      to bottom,
+      rgba(255, 255, 255, 0.03) 0px,
+      rgba(255, 255, 255, 0.03) 1px,
+      transparent 1px,
+      transparent 3px
+    );
+    opacity: 0.5;
+    pointer-events: none;
+  }
+
+  /* Bottom vignette to ground the composition. */
+  .cyber-vignette {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at center, transparent 40%, rgba(2,3,6,0.85) 100%);
+    pointer-events: none;
+  }
+
+  /* Neon glow that pulses with the boot rhythm. */
+  .cyber-neon-breathe {
+    animation: cyberNeonBreathe 2.6s ease-in-out infinite;
+  }
+  @keyframes cyberNeonBreathe {
+    0%, 100% { filter: drop-shadow(0 0 6px rgba(34,211,238,0.65)) drop-shadow(0 0 18px rgba(34,211,238,0.35)); }
+    50%      { filter: drop-shadow(0 0 14px rgba(34,211,238,0.95)) drop-shadow(0 0 34px rgba(99,102,241,0.6)); }
+  }
+
+  /* Glitch text effect for the wordmark. */
+  .cyber-glitch {
+    position: relative;
+  }
+  .cyber-glitch::before,
+  .cyber-glitch::after {
+    content: attr(data-text);
+    position: absolute;
+    inset: 0;
+    opacity: 0.6;
+    pointer-events: none;
+  }
+  .cyber-glitch::before {
+    color: #22d3ee;
+    animation: cyberGlitchA 2.4s infinite linear alternate;
+  }
+  .cyber-glitch::after {
+    color: #f472b6;
+    animation: cyberGlitchB 2.4s infinite linear alternate;
+  }
+  @keyframes cyberGlitchA {
+    0%, 92%  { transform: translate(0,0); opacity: 0; }
+    93%      { transform: translate(-2px,1px); opacity: 0.6; }
+    94%      { transform: translate(2px,-1px); opacity: 0.6; }
+    95%      { transform: translate(0,0); opacity: 0; }
+    100%     { transform: translate(0,0); opacity: 0; }
+  }
+  @keyframes cyberGlitchB {
+    0%, 88%  { transform: translate(0,0); opacity: 0; }
+    89%      { transform: translate(2px,-1px); opacity: 0.6; }
+    90%      { transform: translate(-2px,1px); opacity: 0.6; }
+    91%      { transform: translate(0,0); opacity: 0; }
+    100%     { transform: translate(0,0); opacity: 0; }
+  }
+
+  /* Shimmer that sweeps across the progress fill. */
+  .cyber-shimmer {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.55), transparent);
+    background-size: 200% 100%;
+    animation: cyberShimmer 1.4s linear infinite;
+    mix-blend-mode: screen;
+  }
+  @keyframes cyberShimmer {
+    from { background-position: 200% 0; }
+    to   { background-position: -200% 0; }
+  }
+
+  /* Smoothly spinning neon ring for the loading spinner. */
+  .cyber-spinner {
+    width: 16px;
+    height: 16px;
+    border-radius: 9999px;
+    background: conic-gradient(from 0deg, transparent 15%, #22d3ee 55%, #6366f1 80%, transparent 100%);
+    animation: cyberSpin 0.9s linear infinite;
+    box-shadow: 0 0 8px rgba(34,211,238,0.85), 0 0 20px rgba(34,211,238,0.45);
+  }
+  @keyframes cyberSpin {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+  }
+}

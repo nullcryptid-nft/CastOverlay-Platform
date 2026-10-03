@@ -1,0 +1,211 @@
+import { motion } from "framer-motion";
+import { Trophy, Target, TrendingUp, TrendingDown, Plus, Minus, RefreshCw } from "lucide-react";
+import { invoke } from "@tauri-apps/api/core";
+
+interface ScoreCounterProps {
+  wins: number;
+  losses: number;
+  onWin: () => void;
+  onLoss: () => void;
+  onReset: () => void;
+}
+
+function AnimatedCounter({ value, label, icon, color, glowColor, onIncrement, onDecrement }: {
+  value: number;
+  label: string;
+  icon: React.ReactNode;
+  color: string;
+  glowColor: string;
+  onIncrement: () => void;
+  onDecrement: () => void;
+}) {
+  const digits = value.toString().padStart(3, "0").split("").map(Number);
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 30 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ type: "spring", stiffness: 80, damping: 15 }}
+      className="relative flex flex-col items-center"
+    >
+      <div className="relative mb-4">
+        <div className="w-28 h-28 rounded-2xl bg-gradient-to-br from-bg-card to-bg-tertiary border-2 flex items-center justify-center"
+          style={{ borderColor: `${color}40`, boxShadow: `0 0 30px ${glowColor}40, inset 0 0 30px ${color}10` }}
+        >
+          <span className="text-5xl">{icon}</span>
+        </div>
+        <motion.div
+          animate={{ scale: [1, 1.15, 1], boxShadow: [`0 0 20px ${glowColor}60`, `0 0 40px ${glowColor}`, `0 0 20px ${glowColor}60`] }}
+          transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute -bottom-3 left-1/2 -translate-x-1/2 w-6 h-6 rounded-full flex items-center justify-center"
+          style={{ background: color, boxShadow: `0 0 20px ${glowColor}, 0 0 40px ${glowColor}80` }}
+        >
+          <Plus className="w-3 h-3 text-bg-primary" />
+        </motion.div>
+      </div>
+
+      <div className="flex items-baseline gap-1 mb-2">
+        {digits.map((digit, index) => (
+          <motion.div
+            key={index}
+            initial={{ y: 100 }}
+            animate={{ y: 0 }}
+            transition={{ type: "spring", stiffness: 300, damping: 25, delay: index * 0.05 }}
+            className="relative h-16 w-12 overflow-hidden bg-bg-primary/50 rounded-lg border-r border-border-primary last:border-r-0"
+          >
+            <motion.div
+              animate={{ y: -digit * 64 }}
+              transition={{ type: "spring", stiffness: 300, damping: 25, mass: 0.5 }}
+              className="flex flex-col"
+            >
+              {Array.from({ length: 10 }, (_, i) => (
+                <span
+                  key={i}
+                  className="h-16 w-12 flex items-center justify-center font-display text-4xl font-bold"
+                  style={{
+                    color: i === digit ? color : "#333344",
+                    textShadow: i === digit ? `0 0 20px ${glowColor}, 0 0 40px ${glowColor}80` : "none",
+                  }}
+                >
+                  {i}
+                </span>
+              ))}
+            </motion.div>
+          </motion.div>
+        ))}
+      </div>
+
+      <div className="flex flex-col items-center gap-2">
+        <span className="font-display text-sm font-bold tracking-wider" style={{ color, textShadow: `0 0 10px ${glowColor}` }}>
+          {label}
+        </span>
+        <div className="flex items-center gap-1.5">
+          <motion.button
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+            onClick={onIncrement}
+            className="p-2 rounded-lg bg-bg-tertiary border border-border-primary text-text-secondary hover:border-neon-green/50 hover:text-neon-green hover:shadow-glow-green transition-all duration-300"
+            title="Increment"
+          >
+            <Plus className="w-4 h-4" />
+          </motion.button>
+          <motion.button
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+            onClick={onDecrement}
+            className="p-2 rounded-lg bg-bg-tertiary border border-border-primary text-text-secondary hover:border-neon-pink/50 hover:text-neon-pink hover:shadow-glow-pink transition-all duration-300"
+            title="Decrement"
+          >
+            <Minus className="w-4 h-4" />
+          </motion.button>
+        </div>
+      </div>
+    </motion.div>
+  );
+}
+
+export function ScoreCounter({ wins, losses, onWin, onLoss, onReset }: ScoreCounterProps) {
+  const winRate = wins + losses > 0 ? ((wins / (wins + losses)) * 100).toFixed(1) : "0.0";
+
+  const handleWin = () => {
+    onWin();
+    invoke("increment_wins");
+  };
+
+  const handleLoss = () => {
+    onLoss();
+    invoke("increment_losses");
+  };
+
+  const handleReset = () => {
+    onReset();
+    invoke("reset_score");
+  };
+
+  return (
+    <motion.section
+      initial={{ opacity: 0, y: 30 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ type: "spring", stiffness: 80, damping: 15, delay: 0.4 }}
+      className="card-cyber rounded-2xl p-6 bg-grid-pattern relative overflow-hidden"
+    >
+      <div className="flex items-center justify-between mb-6">
+        <h2 className="font-display text-lg font-bold text-text-primary flex items-center gap-2">
+          <Trophy className="w-5 h-5 text-neon-green" />
+          STREAM SCOREBOARD
+        </h2>
+        <motion.button
+          whileHover={{ scale: 1.05, rotate: 90 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={handleReset}
+          className="px-3 py-1.5 rounded-lg font-mono text-xs bg-bg-tertiary border border-border-primary text-text-secondary hover:border-neon-orange/50 hover:text-neon-orange hover:shadow-[0_0_15px_#ff6b00] transition-all duration-300 flex items-center gap-1.5"
+        >
+          <RefreshCw className="w-3.5 h-3.5" />
+          RESET
+        </motion.button>
+      </div>
+
+      <div className="grid grid-cols-2 gap-6 md:gap-8 max-w-md mx-auto">
+        <AnimatedCounter
+          value={wins}
+          label="WINS"
+          icon={<TrendingUp className="w-8 h-8" />}
+          color="#00FF85"
+          glowColor="#00FF85"
+          onIncrement={handleWin}
+          onDecrement={() => {}}
+        />
+        <AnimatedCounter
+          value={losses}
+          label="LOSSES"
+          icon={<TrendingDown className="w-8 h-8" />}
+          color="#FF0055"
+          glowColor="#FF0055"
+          onIncrement={handleLoss}
+          onDecrement={() => {}}
+        />
+      </div>
+
+      <motion.div
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ delay: 0.6, type: "spring", stiffness: 100, damping: 15 }}
+        className="mt-8 pt-6 border-t border-border-primary flex flex-col items-center gap-3"
+      >
+        <div className="flex items-center justify-center gap-4">
+          <div className="flex items-center gap-2 px-4 py-2 rounded-lg bg-bg-tertiary/50 border border-border-primary">
+            <Target className="w-4 h-4 text-neon-cyan" />
+            <span className="font-mono text-sm text-text-secondary">TOTAL</span>
+            <span className="font-display text-xl font-bold text-text-primary">{wins + losses}</span>
+          </div>
+          <div className="flex items-center gap-2 px-4 py-2 rounded-lg bg-bg-tertiary/50 border border-border-primary">
+            <TrendingUp className="w-4 h-4 text-neon-green" />
+            <span className="font-mono text-sm text-text-secondary">WIN RATE</span>
+            <span className="font-display text-xl font-bold text-neon-green" style={{ textShadow: "0 0 10px #00FF85" }}>
+              {winRate}%
+            </span>
+          </div>
+        </div>
+
+        <motion.div
+          animate={{ scaleX: [1, 1.02, 1] }}
+          transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+          className="w-full h-1.5 bg-bg-tertiary rounded-full overflow-hidden"
+        >
+          <motion.div
+            initial={{ width: 0 }}
+            animate={{ width: `${wins + losses > 0 ? (wins / (wins + losses)) * 100 : 0}%` }}
+            transition={{ type: "spring", stiffness: 80, damping: 15, duration: 1.5, delay: 0.5 }}
+            className="h-full rounded-full relative"
+            style={{
+              background: "linear-gradient(90deg, #00FF85, #00F0FF)",
+              boxShadow: "0 0 15px #00FF85, 0 0 30px #00F0FF",
+            }}
+          >
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-pulse" />
+          </motion.div>
+        </motion.div>
+      </motion.div>
+    </motion.section>
+  );
+}

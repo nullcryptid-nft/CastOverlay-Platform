@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#07090E" />
+      <stop offset="100%" stop-color="#0F1420" />
+    </linearGradient>
+    <linearGradient id="neon" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#06B6D4" />
+      <stop offset="100%" stop-color="#D946EF" />
+    </linearGradient>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="14" result="b" />
+      <feMerge>
+        <feMergeNode in="b" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+  </defs>
+  <rect width="1024" height="1024" rx="220" fill="url(#bg)" />
+  <g filter="url(#glow)" stroke="url(#neon)" stroke-width="34" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M170 300 L512 130 L854 300 L854 640 L512 900 L170 640 Z" />
+    <circle cx="512" cy="520" r="220" opacity="0.85" />
+    <line x1="512" y1="220" x2="512" y2="420" />
+    <line x1="512" y1="620" x2="512" y2="820" />
+    <line x1="212" y1="520" x2="412" y2="520" />
+    <line x1="612" y1="520" x2="812" y2="520" />
+  </g>
+  <g font-family="'Segoe UI', system-ui, sans-serif" font-weight="900" text-anchor="middle" fill="url(#neon)" filter="url(#glow)">
+    <text x="512" y="600" font-size="240" letter-spacing="8">CO</text>
+  </g>
+</svg>
